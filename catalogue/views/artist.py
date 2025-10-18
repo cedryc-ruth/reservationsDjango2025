@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import Http404
 
 from catalogue.models import Artist
+from catalogue.forms import ArtistForm
 
 def index(request):
 	artists = Artist.objects.all()
@@ -32,15 +33,18 @@ def edit(request, artist_id):
 	# pass the object as instance in form
 	form = ArtistForm(request.POST or None, instance = artist)
 	
-	if request.method == 'POST':	#TODO http_override doesn't work
-		# save the data from the form and
-		# redirect to detail_view
-		if form.is_valid():
-			form.save()
-			
-			return render(request, "artist/show.html", {
-				'artist' : artist,
-			})
+	if request.method == 'POST':
+		method = request.POST.get('_method', '').upper()
+
+		if method == 'PUT':
+			# save the data from the form and
+			# redirect to detail_view
+			if form.is_valid():
+				form.save()
+				
+				return render(request, "artist/show.html", {
+					'artist' : artist,
+				})
 
 	return render(request, 'artist/edit.html', {
 		'form' : form,
