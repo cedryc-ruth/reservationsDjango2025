@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import Http404
 
 from catalogue.models import Artist
@@ -24,6 +24,19 @@ def show(request, artist_id):
 	return render(request, 'artist/show.html', {
 		'artist':artist,
 		'title':title 
+	})
+
+def create(request):
+	form = ArtistForm(request.POST or None)
+	
+	if request.method == 'POST':
+		if form.is_valid():
+			form.save()
+			
+			return redirect('catalogue:artist-index')
+
+	return render(request, 'artist/create.html', {
+		'form' : form,
 	})
 
 def edit(request, artist_id):
