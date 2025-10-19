@@ -13,3 +13,9 @@ urlpatterns = [
     path('artist/create', views.artist.create, name='artist-create'),
     path('artist/delete/<int:artist_id>', views.artist.delete, name='artist-delete'),
 ]
+
+from django.contrib import admin
+from .models import Artist
+
+# Register your models here.
+admin.site.register(Artist)
